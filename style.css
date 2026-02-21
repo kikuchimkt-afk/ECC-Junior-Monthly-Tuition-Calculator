@@ -1,0 +1,959 @@
+/* === ECC Junior Tuition Simulator - 🌸 Sakura Theme === */
+@import url('https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
+
+:root {
+    --primary: #e8729a;
+    --primary-dark: #d4568a;
+    --primary-light: #f5a0bc;
+    --accent: #ff8fab;
+    --accent2: #ffc2d4;
+    --bg: linear-gradient(135deg, #fff5f8 0%, #fce4ec 40%, #fff0f5 100%);
+    --card-bg: rgba(255, 255, 255, 0.85);
+    --text-main: #4a3348;
+    --text-sub: #8e6b82;
+    --border: #f3d5e0;
+    --success: #66bb6a;
+    --sakura1: #ffb7c5;
+    --sakura2: #ffd1dc;
+    --sakura3: #ffe4ec;
+    --petal-pink: rgba(255, 183, 197, 0.3);
+    --glass-bg: rgba(255, 255, 255, 0.72);
+    --glass-border: rgba(255, 183, 197, 0.4);
+}
+
+/* === Animated sakura petals background === */
+body {
+    font-family: 'Zen Maru Gothic', 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+    background: var(--bg);
+    color: var(--text-main);
+    margin: 0;
+    padding: 0;
+    line-height: 1.7;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+        radial-gradient(circle at 15% 20%, rgba(255, 183, 197, 0.25) 0%, transparent 50%),
+        radial-gradient(circle at 85% 80%, rgba(255, 209, 220, 0.2) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(252, 228, 236, 0.15) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Sakura petal decoration */
+body::after {
+    content: '🌸';
+    position: fixed;
+    top: -20px;
+    right: 10%;
+    font-size: 120px;
+    opacity: 0.06;
+    pointer-events: none;
+    animation: sakura-float 8s ease-in-out infinite;
+    z-index: 0;
+}
+
+@keyframes sakura-float {
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(20px) rotate(10deg);
+    }
+}
+
+/* Layout */
+.app-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+/* === Header === */
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 24px 20px 18px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 20px;
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 4px 24px rgba(232, 114, 154, 0.08);
+}
+
+.header-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.header h1 {
+    color: var(--primary);
+    font-size: 1.6rem;
+    margin: 0;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.header h1::before {
+    content: '🌸 ';
+}
+
+.header p {
+    color: var(--text-sub);
+    margin: 6px 0 0;
+    font-size: 0.85rem;
+}
+
+/* === Buttons === */
+.icon-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--glass-border);
+    padding: 8px 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 0.82rem;
+    color: var(--text-sub);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: inherit;
+}
+
+.icon-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 4px 16px rgba(232, 114, 154, 0.15);
+    transform: translateY(-1px);
+}
+
+.icon-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* === Main Grid === */
+.main-content {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 24px;
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* === Form Groups (Glass Cards) === */
+.form-group {
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    padding: 22px;
+    border-radius: 18px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 20px rgba(232, 114, 154, 0.06);
+    transition: box-shadow 0.3s ease;
+}
+
+.form-group:hover {
+    box-shadow: 0 6px 28px rgba(232, 114, 154, 0.1);
+}
+
+.form-group h2 {
+    font-size: 1.05rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 14px;
+    color: var(--text-main);
+    font-weight: 700;
+}
+
+.step-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: white;
+    border-radius: 50%;
+    font-size: 0.85rem;
+    font-weight: 700;
+    box-shadow: 0 3px 10px rgba(232, 114, 154, 0.3);
+}
+
+.helper-text {
+    font-size: 0.82rem;
+    color: var(--text-sub);
+    margin: 0 0 14px;
+    line-height: 1.5;
+}
+
+/* === Selects & Inputs === */
+.premium-select {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    font-size: 0.95rem;
+    appearance: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 8L1 3h10z' fill='%23e8729a'/%3E%3C/svg%3E") no-repeat right 12px center;
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+.premium-select:focus {
+    border-color: var(--primary);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(232, 114, 154, 0.12);
+}
+
+.premium-input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    font-size: 0.95rem;
+    box-sizing: border-box;
+    font-family: inherit;
+    transition: all 0.3s;
+    background: white;
+}
+
+.premium-input:focus {
+    border-color: var(--primary);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(232, 114, 154, 0.12);
+}
+
+.premium-input.compact {
+    padding: 12px;
+    border: 2px solid var(--border);
+}
+
+/* === Course Cards === */
+.course-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.course-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    cursor: pointer;
+    padding: 14px 16px;
+    background: linear-gradient(135deg, #fff8fa, #fff0f4);
+    border-radius: 14px;
+    border: 1.5px solid var(--border);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.course-card:hover {
+    border-color: var(--primary-light);
+    box-shadow: 0 4px 16px rgba(232, 114, 154, 0.12);
+    transform: translateY(-1px);
+}
+
+.course-card.selected {
+    border-color: var(--primary);
+    background: linear-gradient(135deg, #fff0f5, #fce4ec);
+    box-shadow: 0 4px 20px rgba(232, 114, 154, 0.18);
+}
+
+.course-card input[type="checkbox"] {
+    margin-top: 3px;
+    accent-color: var(--primary);
+    width: 18px;
+    height: 18px;
+}
+
+.course-info {
+    flex: 1;
+}
+
+.course-name {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--text-main);
+}
+
+.course-detail {
+    font-size: 0.78rem;
+    color: var(--text-sub);
+    margin-top: 2px;
+}
+
+.course-price {
+    font-weight: 700;
+    color: var(--primary);
+    white-space: nowrap;
+    margin-left: auto;
+    padding-left: 10px;
+    font-size: 0.95rem;
+}
+
+.course-sub-options {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px dashed var(--border);
+}
+
+.course-sub-options label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    padding: 4px 0;
+}
+
+.course-sub-options select {
+    padding: 5px 8px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-family: inherit;
+}
+
+.course-sub-options input[type="checkbox"] {
+    accent-color: var(--primary);
+}
+
+/* === Radio Buttons === */
+.radio-group.vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    padding: 12px 16px;
+    background: linear-gradient(135deg, #fff8fa, #fff5f8);
+    border-radius: 14px;
+    border: 1.5px solid var(--border);
+    transition: all 0.3s;
+}
+
+.radio-label:hover {
+    border-color: var(--primary-light);
+    box-shadow: 0 3px 12px rgba(232, 114, 154, 0.08);
+}
+
+.radio-label input[type="radio"] {
+    display: none;
+}
+
+.radio-custom {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    position: relative;
+    flex-shrink: 0;
+    transition: border-color 0.3s;
+}
+
+.radio-label input[type="radio"]:checked+.radio-custom {
+    border-color: var(--primary);
+}
+
+.radio-label input[type="radio"]:checked+.radio-custom::after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.radio-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.radio-text .primary {
+    font-weight: 700;
+    color: var(--text-main);
+    font-size: 0.92rem;
+}
+
+.radio-text .secondary {
+    font-size: 0.78rem;
+    color: var(--text-sub);
+}
+
+/* === Material Fee Table === */
+.material-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+}
+
+.material-table th,
+.material-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+}
+
+.material-table th {
+    background: linear-gradient(135deg, var(--sakura3), #fff8fa);
+    font-weight: 600;
+    font-size: 0.82rem;
+    color: var(--text-sub);
+}
+
+.material-table td input[type="number"] {
+    border: 1px solid var(--border);
+    padding: 5px 8px;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-family: inherit;
+}
+
+.material-course-section {
+    margin-bottom: 20px;
+}
+
+.material-course-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: white;
+    padding: 10px 14px;
+    border-radius: 12px 12px 0 0;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.material-ref-total {
+    font-size: 0.82rem;
+    opacity: 0.9;
+}
+
+.auto-filled {
+    color: var(--text-sub);
+    font-size: 0.85rem;
+}
+
+.handmedown-active td {
+    text-decoration: line-through;
+    opacity: 0.45;
+    background: #fafafa;
+}
+
+.handmedown-active td input[type="checkbox"] {
+    text-decoration: none;
+    opacity: 1;
+}
+
+/* === Estimate Panel (Right Sidebar) === */
+.sticky-card {
+    position: sticky;
+    top: 20px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    padding: 24px;
+    border-radius: 20px;
+    box-shadow:
+        0 10px 40px rgba(232, 114, 154, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Sakura petal decoration on card */
+.sticky-card::before {
+    content: '🌸';
+    position: absolute;
+    top: -10px;
+    right: -5px;
+    font-size: 80px;
+    opacity: 0.08;
+    pointer-events: none;
+}
+
+.sticky-card h2 {
+    color: white;
+    font-size: 1.15rem;
+    margin: 0 0 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    text-align: center;
+    font-weight: 700;
+}
+
+.total-section {
+    margin-bottom: 16px;
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    font-size: 0.9rem;
+}
+
+.total-row.section-label {
+    text-align: center;
+    justify-content: center;
+    opacity: 0.7;
+    font-size: 0.82rem;
+    margin-bottom: 4px;
+}
+
+.total-row.grand-total {
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.initial-cost-section {
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 16px;
+    backdrop-filter: blur(4px);
+}
+
+.initial-cost-section h3 {
+    font-size: 0.88rem;
+    margin: 0 0 8px;
+    opacity: 0.85;
+}
+
+.note {
+    font-size: 0.75rem;
+    opacity: 0.65;
+    margin-top: 6px;
+    text-align: center;
+}
+
+.client-info-box {
+    margin-bottom: 14px;
+}
+
+/* === Action Button === */
+.action-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #FFC2D4, #FFB7C5);
+    color: var(--text-main);
+    border: none;
+    padding: 14px;
+    font-weight: 700;
+    font-size: 1.05rem;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: inherit;
+    box-shadow: 0 4px 16px rgba(255, 183, 197, 0.35);
+    letter-spacing: 0.03em;
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(255, 183, 197, 0.5);
+    background: linear-gradient(135deg, #FFD1DC, #FFC2D4);
+}
+
+.action-btn:active {
+    transform: translateY(0);
+}
+
+.secondary-btn {
+    background: var(--glass-bg);
+    border: 1px solid var(--border);
+    padding: 8px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-family: inherit;
+}
+
+/* === Printable Sheet === */
+.printable-sheet {
+    display: none;
+    background: #fff;
+    padding: 30px 35px;
+    max-width: 800px;
+    margin: 20px auto;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
+    color: #333;
+    font-size: 10pt;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    box-sizing: border-box;
+    position: relative;
+    line-height: 1.4;
+    border-radius: 8px;
+}
+
+.sheet-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--primary);
+    padding-bottom: 10px;
+}
+
+.title-block {
+    flex: 1;
+}
+
+.title-block h1 {
+    font-size: 18pt;
+    color: var(--primary);
+    margin: 0;
+}
+
+.meta-block {
+    margin-top: 8px;
+    font-size: 9pt;
+    color: #666;
+}
+
+.meta-block p {
+    margin: 2px 0;
+}
+
+.header-right {
+    text-align: right;
+    font-size: 9pt;
+    color: #333;
+}
+
+.recipient-section {
+    margin: 15px 0;
+    padding: 10px 0;
+}
+
+.recipient-section h2 {
+    font-size: 14pt;
+    color: var(--primary);
+    border-bottom: 1px solid var(--primary);
+    padding-bottom: 5px;
+    display: inline-block;
+}
+
+.recipient-section p {
+    font-size: 9.5pt;
+    line-height: 1.7;
+    color: #444;
+}
+
+.estimate-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+    font-size: 9.5pt;
+}
+
+.estimate-table th,
+.estimate-table td {
+    border-bottom: 1px solid #e5e7eb;
+    padding: 6px 8px;
+    text-align: left;
+}
+
+.estimate-table th {
+    background: #fdf2f4;
+    color: #444;
+    font-weight: 600;
+    border-top: 1px solid var(--primary);
+}
+
+.estimate-table td:last-child {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.summary-row {
+    font-weight: bold;
+    background: #fff5f8;
+}
+
+.summary-row.grand {
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: white;
+    font-size: 11pt;
+}
+
+.summary-row.grand td {
+    border-color: var(--primary);
+}
+
+.remarks-section {
+    margin-top: 15px;
+    padding: 10px 15px;
+    background: #fdf8fa;
+    border-radius: 8px;
+    border-left: 3px solid var(--primary);
+}
+
+.remarks-section h3 {
+    font-size: 10pt;
+    margin: 0 0 5px;
+    color: var(--primary);
+}
+
+.remarks-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.remarks-section li {
+    font-size: 8.5pt;
+    padding: 2px 0;
+    color: #555;
+}
+
+.remarks-section li::before {
+    content: '🌸 ';
+    font-size: 7pt;
+}
+
+/* === Modal === */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(74, 51, 72, 0.4);
+    backdrop-filter: blur(6px);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-overlay.open {
+    display: flex;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(232, 114, 154, 0.2);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 22px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(135deg, #fff8fa, #fdf2f5);
+    border-radius: 20px 20px 0 0;
+}
+
+.modal-header h2 {
+    font-size: 1.05rem;
+    margin: 0;
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-sub);
+    padding: 4px 8px;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+
+.close-btn:hover {
+    background: var(--sakura3);
+    color: var(--primary);
+}
+
+.modal-body {
+    padding: 22px;
+}
+
+.modal-desc {
+    font-size: 0.85rem;
+    color: var(--text-sub);
+    margin: 0 0 18px;
+}
+
+.form-section {
+    margin-bottom: 18px;
+}
+
+.form-section label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+    font-size: 0.9rem;
+    color: var(--text-main);
+}
+
+.logo-upload-area {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo-preview {
+    max-height: 60px;
+    border-radius: 8px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* === Print Styles === */
+@media print {
+    @page {
+        margin: 0;
+        size: A4;
+    }
+
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+        background: white;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .app-container,
+    .modal-overlay {
+        display: none !important;
+    }
+
+    .printable-sheet {
+        display: block !important;
+        margin: 0;
+        padding: 25mm;
+        box-shadow: none;
+        max-width: 100%;
+        page-break-inside: avoid;
+    }
+}
+
+/* === Animations === */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.form-group {
+    animation: fadeIn 0.4s ease-out both;
+}
+
+.form-group:nth-child(2) {
+    animation-delay: 0.08s;
+}
+
+.form-group:nth-child(3) {
+    animation-delay: 0.16s;
+}
+
+.form-group:nth-child(4) {
+    animation-delay: 0.24s;
+}
+
+.form-group:nth-child(5) {
+    animation-delay: 0.32s;
+}
+
+.course-card {
+    animation: fadeIn 0.3s ease-out both;
+}
+
+/* Empty state */
+.empty-state {
+    text-align: center;
+    padding: 30px;
+    color: var(--text-sub);
+    font-size: 0.9rem;
+}
+
+/* === Scrollbar === */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--sakura3);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--sakura1);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-light);
+}
+
+/* === Selection Color === */
+::selection {
+    background: var(--accent2);
+    color: var(--text-main);
+}
+
+/* Checkbox accent */
+input[type="checkbox"] {
+    accent-color: var(--primary);
+}
+
+/* Number input arrows */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    opacity: 0.6;
+}
