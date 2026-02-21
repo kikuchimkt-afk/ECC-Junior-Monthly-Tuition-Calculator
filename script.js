@@ -1826,8 +1826,14 @@ function generateEstimate() {
     const sheet = $('printable-estimate');
     if (sheet) {
         sheet.style.display = 'block';
+        const originalTitle = document.title;
+        const now = new Date();
+        const ymd = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
+        const name = state.studentName || '______';
+        document.title = `${ymd}_${name}様`;
         setTimeout(() => {
             window.print();
+            document.title = originalTitle;
             sheet.style.display = 'none';
         }, 300);
     }
