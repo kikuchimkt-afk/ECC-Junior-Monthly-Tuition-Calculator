@@ -594,8 +594,8 @@ let state = {
     materialItemOverrides: {},
     handmedowns: {},
     studentName: '',
-    bagDiscount: 1990,
-    bagDiscountEnabled: true
+    bagDiscount: 0,
+    bagDiscountEnabled: false
 };
 
 // ----- DOM Cache -----
@@ -1562,13 +1562,8 @@ function updateCalculations() {
                 materialCost = state.materialOverrides[course.id] ?? opt.materialCost;
             } else {
                 monthly = course.monthly;
-                // Try item-level total first
-                const itemsTotal = getMaterialItemsTotal(course, courseState);
-                if (itemsTotal !== null) {
-                    materialCost = itemsTotal;
-                } else {
-                    materialCost = state.materialOverrides[course.id] ?? (course.materials?.[state.age] || 0);
-                }
+                // Always use price table (materials[age]) as base material cost
+                materialCost = state.materialOverrides[course.id] ?? (course.materials?.[state.age] || 0);
             }
 
             // Addons
@@ -1578,18 +1573,13 @@ function updateCalculations() {
                 course.addons.forEach(addon => {
                     if (courseState.addons[addon.id]) {
                         addonMonthly += addon.monthlyAdd;
-                        // Only add addon materials if NOT using item-level calculation
-                        const itemsTotal = getMaterialItemsTotal(course, courseState);
-                        if (itemsTotal === null) {
-                            addonMaterial += (addon.materialsAdd?.[state.age] || 0);
-                        }
+                        addonMaterial += (addon.materialsAdd?.[state.age] || 0);
                     }
                 });
             }
 
-            // If material was NOT overridden and not using items, add addon materials
-            const itemsTotal = getMaterialItemsTotal(course, courseState);
-            if (state.materialOverrides[course.id] === undefined && itemsTotal === null) {
+            // Add addon materials if not manually overridden
+            if (state.materialOverrides[course.id] === undefined) {
                 materialCost += addonMaterial;
             }
 
@@ -1627,13 +1617,61 @@ function updateCalculations() {
     const initialTotal = totalEntrance + totalMaterial + totalExamFee + totalOneTime - bagDiscount;
     const grandTotal = totalMonthly + initialTotal;
 
+    // Calculate handmedown deduction details
+    let handmedownTotal = 0;
+    const handmedownItems = [];
+    selected.forEach(({ course, courseState }) => {
+        let items = [];
+        if (course.materialItems) {
+            items = items.concat(course.materialItems.map((item, i) => ({ ...item, source: course.id, index: i })));
+        }
+        if (course.addons && courseState.addons) {
+            course.addons.forEach(addon => {
+                if (courseState.addons[addon.id] && addon.materialItemsToAdd) {
+                    addon.materialItemsToAdd.forEach((item, i) => {
+                        items.push({ ...item, source: course.id + '__' + addon.id, index: i });
+                    });
+                }
+            });
+        }
+        items.forEach(item => {
+            const key = item.source + '_' + item.index;
+            const price = state.materialItemOverrides?.[key] !== undefined ? state.materialItemOverrides[key] : item.price;
+            if (!!state.handmedowns?.[key] && price > 0) {
+                handmedownTotal += price;
+                handmedownItems.push({ name: item.name, price });
+            }
+        });
+    });
+
+    // totalMaterial here is already net of handmedowns (from getMaterialItemsTotal)
+    // We want to show gross total, so add handmedowns back for display
+    const grossMaterial = totalMaterial + handmedownTotal;
+
     if (monthlyEl) monthlyEl.textContent = `${totalMonthly.toLocaleString()}円`;
     if (entranceEl) entranceEl.textContent = `${totalEntrance.toLocaleString()}円`;
-    if (materialEl) materialEl.textContent = `${totalMaterial.toLocaleString()}円`;
+    if (materialEl) materialEl.textContent = `${grossMaterial.toLocaleString()}円`;
     if (examEl) examEl.textContent = `${totalExamFee.toLocaleString()}円`;
     if (onetimeEl) onetimeEl.textContent = `${totalOneTime.toLocaleString()}円`;
     if (bagDiscountEl) bagDiscountEl.textContent = `-${bagDiscount.toLocaleString()}円`;
     if (bagDiscountRow) bagDiscountRow.style.display = bagDiscount > 0 ? 'flex' : 'none';
+
+    // Handmedown deduction display
+    const handmedownRow = $('handmedown-deduction-row');
+    const handmedownDisplay = $('handmedown-display');
+    const handmedownList = $('handmedown-items-list');
+    if (handmedownRow) {
+        if (handmedownTotal > 0) {
+            handmedownRow.style.display = 'block';
+            if (handmedownDisplay) handmedownDisplay.textContent = `-${handmedownTotal.toLocaleString()}円`;
+            if (handmedownList) {
+                handmedownList.innerHTML = handmedownItems.map(h => `• ${h.name} (-¥${h.price.toLocaleString()})`).join('<br>');
+            }
+        } else {
+            handmedownRow.style.display = 'none';
+        }
+    }
+
     if (initialEl) initialEl.textContent = `${initialTotal.toLocaleString()}円`;
     if (grandEl) grandEl.textContent = `${grandTotal.toLocaleString()}円`;
 
@@ -1778,6 +1816,8 @@ function generateEstimate() {
       <h3>${cfg.company || 'ECCジュニア教室'}</h3>
       <p>〒${cfg.zip || ''}<br>${(cfg.address || '').replace(/\n/g, '<br>')}</p>
       <p>TEL: ${cfg.phone || ''}</p>
+      ${cfg.invoice ? `<p style="font-size:8pt;color:#666;">登録番号: ${cfg.invoice}</p>` : ''}
+      ${cfg.bank ? `<p style="font-size:8pt;margin-top:4px;border-top:1px solid #eee;padding-top:4px;"><strong>お振込先</strong><br>${cfg.bank.replace(/\n/g, '<br>')}</p>` : ''}
     </div></div>`;
         companyContainer.innerHTML = html;
     }

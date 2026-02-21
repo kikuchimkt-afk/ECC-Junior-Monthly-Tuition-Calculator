@@ -100,11 +100,11 @@
                     <p class="helper-text">スクールバック代金を差し引く場合は金額を入力してください。初回納入金から差し引かれます。</p>
                     <div style="display:flex;align-items:center;gap:10px;">
                         <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
-                            <input type="checkbox" id="bag-discount-toggle" checked>
+                            <input type="checkbox" id="bag-discount-toggle">
                             <span>スクールバック差引を適用する</span>
                         </label>
                     </div>
-                    <div id="bag-discount-input-area" style="margin-top:10px;">
+                    <div id="bag-discount-input-area" style="margin-top:10px;display:none;">
                         <div style="display:flex;align-items:center;gap:8px;">
                             <span style="color:#c8102e;font-weight:bold;">−</span>
                             <input type="number" id="bag-discount-amount" class="premium-input" value="1990" min="0"
@@ -147,6 +147,14 @@
                         <div class="total-row">
                             <span>教材費</span>
                             <span id="material-display">0円</span>
+                        </div>
+                        <div id="handmedown-deduction-row" style="display:none;">
+                            <div class="total-row" style="color:#4ade80;">
+                                <span>お下がり差引</span>
+                                <span id="handmedown-display">-0円</span>
+                            </div>
+                            <div id="handmedown-items-list"
+                                style="font-size:0.7rem;opacity:0.7;padding-left:8px;margin-top:2px;"></div>
                         </div>
                         <div class="total-row" id="onetime-row" style="display:none;">
                             <span>受講料（短期）</span>

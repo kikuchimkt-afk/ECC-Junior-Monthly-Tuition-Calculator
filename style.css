@@ -862,9 +862,20 @@ body::after {
         print-color-adjust: exact;
     }
 
-    .app-container,
+    body::before,
+    body::after {
+        display: none !important;
+    }
+
+    .app-container>*:not(.printable-sheet),
     .modal-overlay {
         display: none !important;
+    }
+
+    .app-container {
+        padding: 0;
+        margin: 0;
+        max-width: 100%;
     }
 
     .printable-sheet {
