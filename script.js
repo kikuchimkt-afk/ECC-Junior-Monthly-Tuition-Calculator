@@ -170,7 +170,7 @@ const DEFAULT_COURSES = {
         detail: '週1回 90分', category: 'eigo',
         ages: ['chu12'],
         entrance: 5500, monthly: 9900, examFee: 0,
-        materials: { chu12: 17170 },
+        materials: { chu12: 21130 },
         materialItems: [
             { name: 'コースブック', price: 0, reusable: false },
             { name: 'アクセスハンドブック', price: 0, reusable: false },
@@ -179,6 +179,7 @@ const DEFAULT_COURSES = {
             { name: 'ウィークリーテスト', price: 0, reusable: false },
             { name: 'ホームワークブック', price: 0, reusable: false },
             { name: '音声・動画教材', price: 0, reusable: true },
+            { name: 'ECC Study Assist（学習支援アプリ）', price: 0, reusable: true },
             { name: 'スクールバッグ', price: 1990, reusable: true }
         ],
         addons: [{
@@ -194,7 +195,7 @@ const DEFAULT_COURSES = {
         detail: '週1回 90分', category: 'eigo',
         ages: ['chu12'],
         entrance: 5500, monthly: 9900, examFee: 0,
-        materials: { chu12: 17170 },
+        materials: { chu12: 21130 },
         materialItems: [
             { name: 'コースブック', price: 0, reusable: false },
             { name: 'アクセスハンドブック', price: 0, reusable: false },
@@ -203,6 +204,7 @@ const DEFAULT_COURSES = {
             { name: 'ウィークリーテスト', price: 0, reusable: false },
             { name: 'ホームワークブック', price: 0, reusable: false },
             { name: '音声・動画教材', price: 0, reusable: true },
+            { name: 'ECC Study Assist（学習支援アプリ）', price: 0, reusable: true },
             { name: 'スクールバッグ', price: 1990, reusable: true }
         ],
         addons: [{
@@ -218,7 +220,7 @@ const DEFAULT_COURSES = {
         detail: '週1回 90分', category: 'eigo',
         ages: ['chu3'],
         entrance: 5500, monthly: 9900, examFee: 0,
-        materials: { chu3: 18490 },
+        materials: { chu3: 22450 },
         materialItems: [
             { name: 'コースブック', price: 0, reusable: false },
             { name: 'アクセスハンドブック', price: 0, reusable: false },
@@ -228,6 +230,7 @@ const DEFAULT_COURSES = {
             { name: 'ホームワークブック', price: 0, reusable: false },
             { name: '音声・動画教材', price: 0, reusable: true },
             { name: '中学英語分野別演習', price: 0, reusable: false },
+            { name: 'ECC Study Assist（学習支援アプリ）', price: 0, reusable: true },
             { name: 'スクールバッグ', price: 1990, reusable: true }
         ],
         addons: [{
@@ -912,7 +915,160 @@ function resetPricing() {
     }
 }
 
-// ----- Material Modal -----
+// ----- Pricing Excel Export / Import -----
+function exportPricingToExcel() {
+    const rows = [];
+    rows.push(['コースID', 'コース名', '項目', '対象', '金額']);
+
+    Object.values(COURSES).forEach(course => {
+        rows.push([course.id, course.name, '入学金', '', course.entrance]);
+
+        if (!course.weeklyOptions && !course.isOneTime) {
+            rows.push([course.id, course.name, '月謝', '', course.monthly]);
+        }
+        if (course.examFee > 0) {
+            rows.push([course.id, course.name, '検定料', '', course.examFee]);
+        }
+
+        // Materials by age
+        if (course.materials) {
+            Object.entries(course.materials).forEach(([ageKey, cost]) => {
+                const ageLabel = AGE_GROUPS.find(a => a.id === ageKey)?.label || ageKey;
+                rows.push([course.id, course.name, '教材費', ageLabel, cost]);
+            });
+        }
+
+        // Weekly options
+        if (course.weeklyOptions) {
+            course.weeklyOptions.forEach(wo => {
+                rows.push([course.id, course.name, '月謝（' + wo.label + '）', '', wo.monthly]);
+                rows.push([course.id, course.name, '教材費（' + wo.label + '）', '', wo.materialCost]);
+            });
+        }
+
+        // One-time options
+        if (course.options) {
+            course.options.forEach(opt => {
+                rows.push([course.id, course.name, '受講料（' + opt.label + '）', '', opt.price]);
+                if (opt.materialCost !== undefined) {
+                    rows.push([course.id, course.name, '教材費（' + opt.label + '）', '', opt.materialCost]);
+                }
+            });
+        }
+
+        // Addons
+        if (course.addons) {
+            course.addons.forEach(addon => {
+                rows.push([course.id, course.name, 'アドオン月謝（' + addon.name + '）', '', addon.monthlyAdd]);
+                if (addon.materialsAdd) {
+                    Object.entries(addon.materialsAdd).forEach(([ageKey, cost]) => {
+                        const ageLabel = AGE_GROUPS.find(a => a.id === ageKey)?.label || ageKey;
+                        rows.push([course.id, course.name, 'アドオン教材費（' + addon.name + '）', ageLabel, cost]);
+                    });
+                }
+            });
+        }
+    });
+
+    const ws = XLSX.utils.aoa_to_sheet(rows);
+    ws['!cols'] = [
+        { wch: 16 },
+        { wch: 36 },
+        { wch: 30 },
+        { wch: 18 },
+        { wch: 12 }
+    ];
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, '授業料設定');
+
+    const today = new Date();
+    const dateStr = today.getFullYear() + String(today.getMonth() + 1).padStart(2, '0') + String(today.getDate()).padStart(2, '0');
+    XLSX.writeFile(wb, `ECC授業料設定_${dateStr}.xlsx`);
+}
+
+function importPricingFromExcel(file) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        try {
+            const data = new Uint8Array(e.target.result);
+            const wb = XLSX.read(data, { type: 'array' });
+            const ws = wb.Sheets[wb.SheetNames[0]];
+            const rows = XLSX.utils.sheet_to_json(ws, { header: 1 });
+
+            if (rows.length < 2) {
+                alert('データが見つかりません。');
+                return;
+            }
+
+            const dataRows = rows.slice(1);
+            let updated = 0;
+
+            // Build reverse age lookup
+            const ageLabelToKey = {};
+            AGE_GROUPS.forEach(a => { ageLabelToKey[a.label] = a.id; });
+
+            dataRows.forEach(row => {
+                if (!row[0]) return;
+                const courseId = String(row[0]).trim();
+                const item = String(row[2] || '').trim();
+                const target = String(row[3] || '').trim();
+                const value = parseInt(row[4]) || 0;
+
+                if (!COURSES[courseId]) return;
+                const course = COURSES[courseId];
+
+                if (item === '入学金') { course.entrance = value; updated++; }
+                else if (item === '月謝') { course.monthly = value; updated++; }
+                else if (item === '検定料') { course.examFee = value; updated++; }
+                else if (item === '教材費' && target) {
+                    const ageKey = ageLabelToKey[target] || target;
+                    if (course.materials) { course.materials[ageKey] = value; updated++; }
+                }
+                else if (item.startsWith('月謝（') && course.weeklyOptions) {
+                    const label = item.replace('月謝（', '').replace('）', '');
+                    const wo = course.weeklyOptions.find(w => w.label === label);
+                    if (wo) { wo.monthly = value; updated++; }
+                }
+                else if (item.startsWith('教材費（') && !item.includes('アドオン')) {
+                    const label = item.replace('教材費（', '').replace('）', '');
+                    if (course.weeklyOptions) {
+                        const wo = course.weeklyOptions.find(w => w.label === label);
+                        if (wo) { wo.materialCost = value; updated++; }
+                    }
+                    if (course.options) {
+                        const opt = course.options.find(o => o.label === label);
+                        if (opt) { opt.materialCost = value; updated++; }
+                    }
+                }
+                else if (item.startsWith('受講料（') && course.options) {
+                    const label = item.replace('受講料（', '').replace('）', '');
+                    const opt = course.options.find(o => o.label === label);
+                    if (opt) { opt.price = value; updated++; }
+                }
+                else if (item.startsWith('アドオン月謝（') && course.addons) {
+                    const addonName = item.replace('アドオン月謝（', '').replace('）', '');
+                    const addon = course.addons.find(a => a.name === addonName);
+                    if (addon) { addon.monthlyAdd = value; updated++; }
+                }
+                else if (item.startsWith('アドオン教材費（') && course.addons) {
+                    const addonName = item.replace('アドオン教材費（', '').replace('）', '');
+                    const ageKey = ageLabelToKey[target] || target;
+                    const addon = course.addons.find(a => a.name === addonName);
+                    if (addon && addon.materialsAdd) { addon.materialsAdd[ageKey] = value; updated++; }
+                }
+            });
+
+            renderPricingModal();
+            alert(`${updated} 件の授業料データをインポートしました。\n「保存して閉じる」で確定してください。`);
+
+        } catch (err) {
+            console.error('Import error:', err);
+            alert('ファイルの読み込みに失敗しました。正しいExcelファイルを選択してください。');
+        }
+    };
+    reader.readAsArrayBuffer(file);
+}
+
 function renderMaterialModal() {
     const container = $('material-tables-container');
     if (!container) return;
@@ -1127,6 +1283,156 @@ function resetMaterial() {
     }
 }
 
+// ----- Excel Export / Import -----
+function exportMaterialToExcel() {
+    const rows = [];
+    // Header row
+    rows.push(['コースID', 'コース名', '種別', '品目名', '価格', 'お下がり可']);
+
+    Object.values(COURSES).forEach(course => {
+        // Main material items
+        if (course.materialItems && course.materialItems.length > 0) {
+            course.materialItems.forEach(item => {
+                rows.push([
+                    course.id,
+                    course.name,
+                    'メイン教材',
+                    item.name,
+                    item.price,
+                    item.reusable ? '○' : ''
+                ]);
+            });
+        }
+        // Addon material items
+        if (course.addons) {
+            course.addons.forEach(addon => {
+                if (addon.materialItemsToAdd && addon.materialItemsToAdd.length > 0) {
+                    addon.materialItemsToAdd.forEach(item => {
+                        rows.push([
+                            course.id,
+                            course.name,
+                            'アドオン: ' + addon.name,
+                            item.name,
+                            item.price,
+                            item.reusable ? '○' : ''
+                        ]);
+                    });
+                }
+            });
+        }
+        // Multiple materialItems variants (eiken etc.)
+        const variantKeys = Object.keys(course).filter(k => k.startsWith('materialItems') && k !== 'materialItems');
+        variantKeys.forEach(key => {
+            const label = key.replace('materialItems', '') || 'バリアント';
+            if (Array.isArray(course[key])) {
+                course[key].forEach(item => {
+                    rows.push([
+                        course.id,
+                        course.name,
+                        'バリアント: ' + label,
+                        item.name,
+                        item.price,
+                        item.reusable ? '○' : ''
+                    ]);
+                });
+            }
+        });
+    });
+
+    const ws = XLSX.utils.aoa_to_sheet(rows);
+    // Set column widths
+    ws['!cols'] = [
+        { wch: 16 },  // コースID
+        { wch: 36 },  // コース名
+        { wch: 28 },  // 種別
+        { wch: 44 },  // 品目名
+        { wch: 10 },  // 価格
+        { wch: 10 }   // お下がり可
+    ];
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, '教材データ');
+
+    const today = new Date();
+    const dateStr = today.getFullYear() + String(today.getMonth() + 1).padStart(2, '0') + String(today.getDate()).padStart(2, '0');
+    XLSX.writeFile(wb, `ECC教材データ_${dateStr}.xlsx`);
+}
+
+function importMaterialFromExcel(file) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        try {
+            const data = new Uint8Array(e.target.result);
+            const wb = XLSX.read(data, { type: 'array' });
+            const ws = wb.Sheets[wb.SheetNames[0]];
+            const rows = XLSX.utils.sheet_to_json(ws, { header: 1 });
+
+            if (rows.length < 2) {
+                alert('データが見つかりません。');
+                return;
+            }
+
+            // Skip header row
+            const dataRows = rows.slice(1);
+
+            // Group by course ID
+            const courseMap = {};
+            dataRows.forEach(row => {
+                if (!row[0]) return;
+                const courseId = String(row[0]).trim();
+                const type = String(row[2] || '').trim();
+                const itemName = String(row[3] || '').trim();
+                const price = parseInt(row[4]) || 0;
+                const reusable = String(row[5] || '').trim() === '○';
+
+                if (!itemName) return;
+
+                if (!courseMap[courseId]) courseMap[courseId] = { main: [], addons: {} };
+
+                if (type === 'メイン教材') {
+                    courseMap[courseId].main.push({ name: itemName, price, reusable });
+                } else if (type.startsWith('アドオン: ')) {
+                    const addonName = type.replace('アドオン: ', '');
+                    if (!courseMap[courseId].addons[addonName]) courseMap[courseId].addons[addonName] = [];
+                    courseMap[courseId].addons[addonName].push({ name: itemName, price, reusable });
+                }
+                // バリアント types are informational, not imported back
+            });
+
+            // Apply to COURSES
+            let updated = 0;
+            Object.keys(courseMap).forEach(courseId => {
+                if (!COURSES[courseId]) return;
+                const course = COURSES[courseId];
+                const imported = courseMap[courseId];
+
+                // Update main materialItems
+                if (imported.main.length > 0) {
+                    course.materialItems = imported.main;
+                    updated++;
+                }
+
+                // Update addon materialItemsToAdd
+                if (course.addons) {
+                    course.addons.forEach(addon => {
+                        if (imported.addons[addon.name]) {
+                            addon.materialItemsToAdd = imported.addons[addon.name];
+                        }
+                    });
+                }
+            });
+
+            // Re-render modal
+            renderMaterialModal();
+            alert(`${updated} コースの教材データをインポートしました。\n「保存して閉じる」で確定してください。`);
+
+        } catch (err) {
+            console.error('Import error:', err);
+            alert('ファイルの読み込みに失敗しました。正しいExcelファイルを選択してください。');
+        }
+    };
+    reader.readAsArrayBuffer(file);
+}
+
 // ----- Init -----
 function init() {
     renderAgeSelector();
@@ -1152,6 +1458,22 @@ function init() {
     $('set-default-btn')?.addEventListener('click', setDefaultPricing);
     $('reset-pricing-btn')?.addEventListener('click', resetPricing);
 
+    // Pricing Excel export/import
+    $('export-pricing-btn')?.addEventListener('click', () => {
+        applyPricingFromModal();
+        exportPricingToExcel();
+    });
+    $('import-pricing-btn')?.addEventListener('click', () => {
+        $('import-pricing-file').click();
+    });
+    $('import-pricing-file')?.addEventListener('change', e => {
+        const file = e.target.files[0];
+        if (file) {
+            importPricingFromExcel(file);
+            e.target.value = '';
+        }
+    });
+
     // Material modal
     $('open-material-btn')?.addEventListener('click', () => {
         renderMaterialModal();
@@ -1161,6 +1483,22 @@ function init() {
     $('save-material-btn')?.addEventListener('click', saveMaterial);
     $('set-default-material-btn')?.addEventListener('click', setDefaultMaterial);
     $('reset-material-btn')?.addEventListener('click', resetMaterial);
+
+    // Material Excel export/import
+    $('export-material-btn')?.addEventListener('click', () => {
+        applyMaterialFromModal();
+        exportMaterialToExcel();
+    });
+    $('import-material-btn')?.addEventListener('click', () => {
+        $('import-material-file').click();
+    });
+    $('import-material-file')?.addEventListener('change', e => {
+        const file = e.target.files[0];
+        if (file) {
+            importMaterialFromExcel(file);
+            e.target.value = '';
+        }
+    });
 
     // Load saved material data
     const savedMaterial = localStorage.getItem(MATERIAL_KEY);
@@ -1817,9 +2155,18 @@ function generateEstimate() {
       <p>〒${cfg.zip || ''}<br>${(cfg.address || '').replace(/\n/g, '<br>')}</p>
       <p>TEL: ${cfg.phone || ''}</p>
       ${cfg.invoice ? `<p style="font-size:8pt;color:#666;">登録番号: ${cfg.invoice}</p>` : ''}
-      ${cfg.bank ? `<p style="font-size:8pt;margin-top:4px;border-top:1px solid #eee;padding-top:4px;"><strong>お振込先</strong><br>${cfg.bank.replace(/\n/g, '<br>')}</p>` : ''}
     </div></div>`;
         companyContainer.innerHTML = html;
+
+        // Bank info at bottom of remarks
+        const bankContainer = $('print-bank-info');
+        if (bankContainer) {
+            if (cfg.bank) {
+                bankContainer.innerHTML = `<p style="margin:0;font-size:9pt;"><strong>【お振込先】</strong><br>${cfg.bank.replace(/\n/g, '<br>')}</p>`;
+            } else {
+                bankContainer.innerHTML = '';
+            }
+        }
     }
 
     // Show print sheet and print

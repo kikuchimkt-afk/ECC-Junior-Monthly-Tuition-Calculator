@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ECCジュニア 授業料シミュレーター</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
 
 <body>
@@ -38,7 +39,6 @@
                     教材費設定
                 </button>
             </div>
-            <p>2025年度 学費案内に基づく授業料のシミュレーション</p>
         </header>
 
         <main class="main-content">
@@ -251,6 +251,7 @@
                     <li>一旦納入された入学金・授業料・教材費等は、返金できかねますのでご了承ください。</li>
                     <li>1年以内に教室で再受講希望の場合は、入学金を全額免除します。</li>
                 </ul>
+                <div id="print-bank-info" style="margin-top:12px;"></div>
             </div>
         </div>
 
@@ -331,6 +332,21 @@
                 </div>
 
                 <div
+                    style="margin-top:15px;padding:12px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;">
+                    <p style="margin:0 0 8px;font-size:0.85rem;color:#15803d;font-weight:bold;">📊 Excelで一括管理</p>
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                        <button id="export-pricing-btn" class="icon-btn"
+                            style="color:#15803d;border-color:#15803d;font-size:0.85rem;padding:6px 14px;">⬇
+                            Excelダウンロード</button>
+                        <button id="import-pricing-btn" class="icon-btn"
+                            style="color:#1d4ed8;border-color:#1d4ed8;font-size:0.85rem;padding:6px 14px;">⬆
+                            Excelインポート</button>
+                        <input type="file" id="import-pricing-file" accept=".xlsx,.xls" style="display:none;">
+                    </div>
+                    <p style="margin:8px 0 0;font-size:0.75rem;color:#666;">ダウンロードしたExcelファイルで価格を編集し、インポートで反映できます。</p>
+                </div>
+
+                <div
                     style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
                     <div>
                         <button id="reset-pricing-btn" class="icon-btn"
@@ -358,6 +374,21 @@
 
                 <div id="material-tables-container">
                     <!-- JS generated -->
+                </div>
+
+                <div
+                    style="margin-top:15px;padding:12px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;">
+                    <p style="margin:0 0 8px;font-size:0.85rem;color:#15803d;font-weight:bold;">📊 Excelで一括管理</p>
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                        <button id="export-material-btn" class="icon-btn"
+                            style="color:#15803d;border-color:#15803d;font-size:0.85rem;padding:6px 14px;">⬇
+                            Excelダウンロード</button>
+                        <button id="import-material-btn" class="icon-btn"
+                            style="color:#1d4ed8;border-color:#1d4ed8;font-size:0.85rem;padding:6px 14px;">⬆
+                            Excelインポート</button>
+                        <input type="file" id="import-material-file" accept=".xlsx,.xls" style="display:none;">
+                    </div>
+                    <p style="margin:8px 0 0;font-size:0.75rem;color:#666;">ダウンロードしたExcelファイルで価格を編集し、インポートで反映できます。</p>
                 </div>
 
                 <div
