@@ -589,6 +589,46 @@ const AGE_GROUPS = [
 ];
 
 // ----- State -----
+const REMARKS_KEY = 'eccjr_remarks';
+const ENTRANCE_CONDITIONS_KEY = 'eccjr_entrance_conditions';
+
+const DEFAULT_REMARKS = [
+    { text: '月謝は毎月最終授業日までにその翌月分を納入いただきます。', checked: true, custom: false },
+    { text: '月半ば（11日〜20日）での入学の場合、月謝は半額となります（開講月4月を除く）。', checked: true, custom: false },
+    { text: '在籍生のご家族（同居の2親等まで）が入学される場合は、入学金が全額免除されます。', checked: true, custom: false },
+    { text: '一旦納入された入学金・授業料・教材費等は、返金できかねますのでご了承ください。', checked: true, custom: false },
+    { text: '1年以内に教室で再受講希望の場合は、入学金を全額免除します。', checked: true, custom: false }
+];
+
+const DEFAULT_ENTRANCE_CONDITIONS = {
+    half: '',
+    full: '在籍生の家族（同居の2親等まで）が入学する場合'
+};
+
+function loadRemarks() {
+    try {
+        const saved = localStorage.getItem(REMARKS_KEY);
+        if (saved) return JSON.parse(saved);
+    } catch (e) { }
+    return DEFAULT_REMARKS.map(r => ({ ...r }));
+}
+
+function saveRemarks() {
+    localStorage.setItem(REMARKS_KEY, JSON.stringify(state.remarks));
+}
+
+function loadEntranceConditions() {
+    try {
+        const saved = localStorage.getItem(ENTRANCE_CONDITIONS_KEY);
+        if (saved) return { ...DEFAULT_ENTRANCE_CONDITIONS, ...JSON.parse(saved) };
+    } catch (e) { }
+    return { ...DEFAULT_ENTRANCE_CONDITIONS };
+}
+
+function saveEntranceConditions() {
+    localStorage.setItem(ENTRANCE_CONDITIONS_KEY, JSON.stringify(state.entranceConditions));
+}
+
 let state = {
     age: 'elem_low',
     selectedCourses: {},
@@ -598,7 +638,9 @@ let state = {
     handmedowns: {},
     studentName: '',
     bagDiscount: 0,
-    bagDiscountEnabled: false
+    bagDiscountEnabled: false,
+    remarks: [],
+    entranceConditions: {}
 };
 
 // ----- DOM Cache -----
@@ -1435,9 +1477,15 @@ function importMaterialFromExcel(file) {
 
 // ----- Init -----
 function init() {
+    // Load remarks and entrance conditions from storage
+    state.remarks = loadRemarks();
+    state.entranceConditions = loadEntranceConditions();
+
     renderAgeSelector();
     renderCourses();
     setupEntranceListeners();
+    renderRemarksEditor();
+    setupRemarksListeners();
     updateCalculations();
 
     $('student-name')?.addEventListener('input', e => { state.studentName = e.target.value; });
@@ -1693,6 +1741,110 @@ function setupEntranceListeners() {
             }
         });
     });
+
+    // Condition text click-to-edit
+    document.querySelectorAll('.entrance-condition').forEach(el => {
+        el.addEventListener('click', e => {
+            e.preventDefault();
+            e.stopPropagation();
+            const type = el.dataset.conditionType; // 'half' or 'full'
+            const editor = $('entrance-condition-editor');
+            const label = $('condition-edit-label');
+            const input = $('condition-edit-input');
+            if (!editor || !label || !input) return;
+            label.textContent = type === 'half' ? '半額免除の条件：' : '全額免除の条件：';
+            input.value = state.entranceConditions[type] || '';
+            editor.style.display = 'block';
+            editor._editType = type;
+            input.focus();
+        });
+    });
+
+    $('condition-save-btn')?.addEventListener('click', () => {
+        const editor = $('entrance-condition-editor');
+        const input = $('condition-edit-input');
+        if (!editor) return;
+        const type = editor._editType;
+        const newVal = input.value.trim();
+        state.entranceConditions[type] = newVal;
+        saveEntranceConditions();
+        const desc = $(type === 'half' ? 'half-waiver-desc' : 'full-waiver-desc');
+        if (desc) desc.textContent = newVal || '条件を入力してください';
+        editor.style.display = 'none';
+    });
+
+    $('condition-cancel-btn')?.addEventListener('click', () => {
+        const editor = $('entrance-condition-editor');
+        if (editor) editor.style.display = 'none';
+    });
+
+    // Load saved conditions
+    const conds = state.entranceConditions;
+    const halfDesc = $('half-waiver-desc');
+    const fullDesc = $('full-waiver-desc');
+    if (halfDesc) halfDesc.textContent = conds.half || '条件を入力してください';
+    if (fullDesc) fullDesc.textContent = conds.full || '条件を入力してください';
+}
+
+// ----- Remarks Editor -----
+function renderRemarksEditor() {
+    const container = $('remarks-editor-list');
+    if (!container) return;
+    container.innerHTML = '';
+
+    state.remarks.forEach((remark, idx) => {
+        const item = document.createElement('div');
+        item.className = 'remark-item' + (remark.checked ? ' checked' : '');
+        item.innerHTML = `
+            <label class="remark-label">
+                <input type="checkbox" class="remark-cb" data-idx="${idx}" ${remark.checked ? 'checked' : ''}>
+                <span class="remark-text">${remark.text}</span>
+            </label>
+            ${remark.custom ? `<button type="button" class="remark-delete-btn" data-idx="${idx}" title="削除">✕</button>` : ''}
+        `;
+        container.appendChild(item);
+    });
+
+    // Event: checkbox toggle
+    container.querySelectorAll('.remark-cb').forEach(cb => {
+        cb.addEventListener('change', e => {
+            const idx = parseInt(e.target.dataset.idx);
+            state.remarks[idx].checked = e.target.checked;
+            e.target.closest('.remark-item').classList.toggle('checked', e.target.checked);
+            saveRemarks();
+        });
+    });
+
+    // Event: delete custom remark
+    container.querySelectorAll('.remark-delete-btn').forEach(btn => {
+        btn.addEventListener('click', e => {
+            const idx = parseInt(e.target.dataset.idx);
+            state.remarks.splice(idx, 1);
+            saveRemarks();
+            renderRemarksEditor();
+        });
+    });
+}
+
+function setupRemarksListeners() {
+    $('add-remark-btn')?.addEventListener('click', () => {
+        const input = $('new-remark-input');
+        if (!input) return;
+        const text = input.value.trim();
+        if (!text) return;
+        state.remarks.push({ text, checked: true, custom: true });
+        saveRemarks();
+        input.value = '';
+        renderRemarksEditor();
+    });
+
+    // Enter key support
+    $('new-remark-input')?.addEventListener('keydown', e => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            $('add-remark-btn')?.click();
+        }
+    });
 }
 
 // ----- Material Fee Table -----
@@ -1937,6 +2089,7 @@ function updateCalculations() {
 
     // Entrance fee logic
     if (state.entranceType === 'waived') totalEntrance = 0;
+    else if (state.entranceType === 'half') totalEntrance = Math.round(totalEntrance / 2);
 
     // Bag discount
     const bagDiscount = state.bagDiscountEnabled ? (state.bagDiscount || 0) : 0;
@@ -2126,9 +2279,14 @@ function generateEstimate() {
 
     // --- Initial section ---
     addSectionRow('【 初回諸費用 】');
-    if (calc.totalEntrance > 0) addRow('入学金', state.entranceType === 'waived' ? '家族免除' : '通常', calc.totalEntrance);
-    if (state.entranceType === 'waived' && Object.values(state.selectedCourses).some(cs => cs.selected)) {
-        addRow('入学金', '家族免除', 0);
+    if (state.entranceType === 'full' && calc.totalEntrance > 0) {
+        addRow('入学金', '通常', calc.totalEntrance);
+    } else if (state.entranceType === 'half' && Object.values(state.selectedCourses).some(cs => cs.selected)) {
+        const condText = state.entranceConditions.half || '半額免除';
+        addRow('入学金', condText, calc.totalEntrance);
+    } else if (state.entranceType === 'waived' && Object.values(state.selectedCourses).some(cs => cs.selected)) {
+        const condText = state.entranceConditions.full || '全額免除';
+        addRow('入学金', condText, 0);
     }
     if (calc.totalExamFee > 0) addRow('検定料', 'ECC全国児童・中学生英語検定', calc.totalExamFee);
     calc.breakdown.forEach(b => {
@@ -2157,6 +2315,17 @@ function generateEstimate() {
       ${cfg.invoice ? `<p style="font-size:8pt;color:#666;">登録番号: ${cfg.invoice}</p>` : ''}
     </div></div>`;
         companyContainer.innerHTML = html;
+
+        // Render active remarks
+        const remarksList = $('print-remarks-list');
+        if (remarksList) {
+            const activeRemarks = state.remarks.filter(r => r.checked);
+            if (activeRemarks.length > 0) {
+                remarksList.innerHTML = '<ul>' + activeRemarks.map(r => `<li>${r.text}</li>`).join('') + '</ul>';
+            } else {
+                remarksList.innerHTML = '';
+            }
+        }
 
         // Bank info at bottom of remarks
         const bankContainer = $('print-bank-info');

@@ -968,3 +968,102 @@ input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
     opacity: 0.6;
 }
+
+/* === Entrance Condition Editor === */
+.entrance-condition {
+    cursor: pointer;
+    border-bottom: 1px dashed var(--text-sub);
+    transition: color 0.2s, border-color 0.2s;
+}
+
+.entrance-condition:hover {
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+.entrance-condition-editor {
+    margin-top: 12px;
+    padding: 12px 14px;
+    background: linear-gradient(135deg, #fff8fa, #fff5f8);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+}
+
+.condition-edit-label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-sub);
+    margin-bottom: 6px;
+}
+
+/* === Remarks Editor === */
+#remarks-editor-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+.remark-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px 12px;
+    background: linear-gradient(135deg, #fff8fa, #fff5f8);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    transition: all 0.2s;
+}
+
+.remark-item.checked {
+    border-color: var(--primary-light);
+    background: linear-gradient(135deg, #fff0f5, #fce4ec);
+}
+
+.remark-item:not(.checked) {
+    opacity: 0.55;
+}
+
+.remark-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    cursor: pointer;
+    flex: 1;
+    min-width: 0;
+}
+
+.remark-label input[type="checkbox"] {
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.remark-text {
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: var(--text-main);
+    word-break: break-all;
+}
+
+.remark-delete-btn {
+    background: none;
+    border: none;
+    color: #ccc;
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 2px 6px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+.remark-delete-btn:hover {
+    color: #e53e3e;
+    background: rgba(229, 62, 62, 0.08);
+}
+
+.remarks-add-area {
+    padding-top: 4px;
+}

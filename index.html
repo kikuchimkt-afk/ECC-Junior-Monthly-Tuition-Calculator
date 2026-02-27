@@ -75,13 +75,33 @@
                             </div>
                         </label>
                         <label class="radio-label">
+                            <input type="radio" name="entrance-fee" value="half">
+                            <span class="radio-custom"></span>
+                            <div class="radio-text">
+                                <span class="primary">入学金半額免除（2,750円）</span>
+                                <span class="secondary entrance-condition" id="half-waiver-desc"
+                                    data-condition-type="half">条件を入力してください</span>
+                            </div>
+                        </label>
+                        <label class="radio-label">
                             <input type="radio" name="entrance-fee" value="waived">
                             <span class="radio-custom"></span>
                             <div class="radio-text">
                                 <span class="primary">入学金全額免除</span>
-                                <span class="secondary">在籍生の家族（同居の2親等まで）が入学する場合</span>
+                                <span class="secondary entrance-condition" id="full-waiver-desc"
+                                    data-condition-type="full">在籍生の家族（同居の2親等まで）が入学する場合</span>
                             </div>
                         </label>
+                    </div>
+                    <div class="entrance-condition-editor" id="entrance-condition-editor" style="display:none;">
+                        <label class="condition-edit-label" id="condition-edit-label"></label>
+                        <input type="text" id="condition-edit-input" class="premium-input" placeholder="免除条件を入力">
+                        <div style="display:flex;gap:8px;margin-top:6px;">
+                            <button type="button" id="condition-save-btn" class="icon-btn"
+                                style="color:#15803d;border-color:#15803d;font-size:0.8rem;padding:4px 12px;">保存</button>
+                            <button type="button" id="condition-cancel-btn" class="icon-btn"
+                                style="color:#666;border-color:#ccc;font-size:0.8rem;padding:4px 12px;">キャンセル</button>
+                        </div>
                     </div>
                 </div>
 
@@ -110,6 +130,24 @@
                             <input type="number" id="bag-discount-amount" class="premium-input" value="1990" min="0"
                                 style="width:120px;text-align:right;">
                             <span>円</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 6: 備考欄 -->
+                <div class="form-group">
+                    <h2><span class="step-num">6</span> 備考（見積書に記載）</h2>
+                    <p class="helper-text">チェックを入れた項目が見積書の備考欄に表示されます。カスタム備考も追加できます。</p>
+                    <div id="remarks-editor-list">
+                        <!-- JS generated -->
+                    </div>
+                    <div class="remarks-add-area">
+                        <div style="display:flex;gap:8px;align-items:center;">
+                            <input type="text" id="new-remark-input" class="premium-input" placeholder="新しい備考を入力..."
+                                style="flex:1;">
+                            <button type="button" id="add-remark-btn" class="icon-btn"
+                                style="color:#15803d;border-color:#15803d;font-size:0.85rem;padding:6px 14px;white-space:nowrap;">＋
+                                追加</button>
                         </div>
                     </div>
                 </div>
@@ -244,13 +282,9 @@
 
             <div class="remarks-section">
                 <h3>備考</h3>
-                <ul>
-                    <li>月謝は毎月最終授業日までにその翌月分を納入いただきます。</li>
-                    <li>月半ば（11日〜20日）での入学の場合、月謝は半額となります（開講月4月を除く）。</li>
-                    <li>在籍生のご家族（同居の2親等まで）が入学される場合は、入学金が全額免除されます。</li>
-                    <li>一旦納入された入学金・授業料・教材費等は、返金できかねますのでご了承ください。</li>
-                    <li>1年以内に教室で再受講希望の場合は、入学金を全額免除します。</li>
-                </ul>
+                <div id="print-remarks-list">
+                    <!-- JS generated -->
+                </div>
                 <div id="print-bank-info" style="margin-top:12px;"></div>
             </div>
         </div>
