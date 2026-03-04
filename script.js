@@ -141,7 +141,7 @@ const DEFAULT_COURSES = {
     },
     PA: {
         id: 'PA', name: 'PA 英語・英会話（小学5〜6年 上級）',
-        detail: '週1回 100分', category: 'eigo',
+        detail: '週1回 英会話60分＋読み書き40分（計100分）', category: 'eigo',
         ages: ['elem_high'],
         entrance: 5500, monthly: 7700, examFee: 2200,
         materials: { elem_high: 18440 },
