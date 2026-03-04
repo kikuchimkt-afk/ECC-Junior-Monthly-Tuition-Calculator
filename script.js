@@ -62,7 +62,7 @@ const DEFAULT_COURSES = {
     },
     PF: {
         id: 'PF', name: 'PF 英語・英会話（小学1〜3年）',
-        detail: '週1回 60分', category: 'eigo',
+        detail: '週1回 英会話60分＋読み書き40分（計100分）', category: 'eigo',
         ages: ['elem_low'],
         entrance: 5500, monthly: 7700, examFee: 2200,
         materials: { elem_low: 19910 },
@@ -89,7 +89,7 @@ const DEFAULT_COURSES = {
     },
     PI: {
         id: 'PI', name: 'PI 英語・英会話（小学3〜4年 中級）',
-        detail: '週1回 60分', category: 'eigo',
+        detail: '週1回 英会話60分＋読み書き40分（計100分）', category: 'eigo',
         ages: ['elem_low', 'elem_high'],
         entrance: 5500, monthly: 7700, examFee: 2200,
         materials: { elem_low: 17920, elem_high: 17920 },
@@ -115,7 +115,7 @@ const DEFAULT_COURSES = {
     },
     PE: {
         id: 'PE', name: 'PE 英語・英会話（小学4〜6年）',
-        detail: '週1回 60分', category: 'eigo',
+        detail: '週1回 英会話60分＋読み書き40分（計100分）', category: 'eigo',
         ages: ['elem_high'],
         entrance: 5500, monthly: 7700, examFee: 2200,
         materials: { elem_high: 19910 },
