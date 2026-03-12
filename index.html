@@ -114,19 +114,37 @@
                     </div>
                 </div>
 
-                <!-- Step 5: スクールバック差引 -->
+                <!-- Step 5: スクールバック代金 -->
                 <div class="form-group">
-                    <h2><span class="step-num">5</span> スクールバック代金（差引）</h2>
-                    <p class="helper-text">スクールバック代金を差し引く場合は金額を入力してください。初回納入金から差し引かれます。</p>
+                    <h2><span class="step-num">5</span> スクールバック代金</h2>
+                    <p class="helper-text">スクールバック代金を追加（購入）または差し引く（お下がり分控除）場合に設定してください。</p>
                     <div style="display:flex;align-items:center;gap:10px;">
                         <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
                             <input type="checkbox" id="bag-discount-toggle">
-                            <span>スクールバック差引を適用する</span>
+                            <span>スクールバック代金を適用する</span>
                         </label>
                     </div>
                     <div id="bag-discount-input-area" style="margin-top:10px;display:none;">
+                        <div class="radio-group vertical" style="gap:8px;margin-bottom:10px;">
+                            <label class="radio-label" style="padding:10px 14px;">
+                                <input type="radio" name="bag-mode" value="add" checked>
+                                <span class="radio-custom"></span>
+                                <div class="radio-text">
+                                    <span class="primary">追加（購入）</span>
+                                    <span class="secondary">スクールバック代金を初回納入金に追加します</span>
+                                </div>
+                            </label>
+                            <label class="radio-label" style="padding:10px 14px;">
+                                <input type="radio" name="bag-mode" value="subtract">
+                                <span class="radio-custom"></span>
+                                <div class="radio-text">
+                                    <span class="primary">差引（お下がり控除）</span>
+                                    <span class="secondary">教材費に含まれるスクールバック代金を差し引きます</span>
+                                </div>
+                            </label>
+                        </div>
                         <div style="display:flex;align-items:center;gap:8px;">
-                            <span style="color:#c8102e;font-weight:bold;">−</span>
+                            <span id="bag-amount-sign" style="font-weight:bold;color:#15803d;font-size:1.1rem;">＋</span>
                             <input type="number" id="bag-discount-amount" class="premium-input" value="1990" min="0"
                                 style="width:120px;text-align:right;">
                             <span>円</span>
@@ -199,7 +217,7 @@
                             <span id="onetime-display">0円</span>
                         </div>
                         <div class="total-row" id="bag-discount-row" style="display:none;">
-                            <span>スクールバック差引</span>
+                            <span id="bag-discount-label">スクールバック差引</span>
                             <span id="bag-discount-display" style="color:#4ade80;">-0円</span>
                         </div>
                         <div class="total-row"

@@ -639,6 +639,7 @@ let state = {
     studentName: '',
     bagDiscount: 0,
     bagDiscountEnabled: false,
+    bagMode: 'add',
     remarks: [],
     entranceConditions: {}
 };
@@ -1554,7 +1555,7 @@ function init() {
         try { applyMaterialData(JSON.parse(savedMaterial)); } catch (e) { }
     }
 
-    // Bag discount
+    // Bag discount / add
     $('bag-discount-toggle')?.addEventListener('change', e => {
         state.bagDiscountEnabled = e.target.checked;
         const area = $('bag-discount-input-area');
@@ -1573,6 +1574,23 @@ function init() {
     $('bag-discount-amount')?.addEventListener('input', e => {
         state.bagDiscount = parseInt(e.target.value) || 0;
         updateCalculations();
+    });
+    // Bag mode radio buttons
+    document.querySelectorAll('input[name="bag-mode"]').forEach(radio => {
+        radio.addEventListener('change', e => {
+            state.bagMode = e.target.value;
+            const sign = $('bag-amount-sign');
+            if (sign) {
+                if (state.bagMode === 'add') {
+                    sign.textContent = '＋';
+                    sign.style.color = '#15803d';
+                } else {
+                    sign.textContent = '−';
+                    sign.style.color = '#c8102e';
+                }
+            }
+            updateCalculations();
+        });
     });
 }
 
@@ -2091,8 +2109,10 @@ function updateCalculations() {
     if (state.entranceType === 'waived') totalEntrance = 0;
     else if (state.entranceType === 'half') totalEntrance = Math.round(totalEntrance / 2);
 
-    // Bag discount
-    const bagDiscount = state.bagDiscountEnabled ? (state.bagDiscount || 0) : 0;
+    // Bag discount / add
+    const bagAmount = state.bagDiscountEnabled ? (state.bagDiscount || 0) : 0;
+    const bagDiscount = state.bagMode === 'subtract' ? bagAmount : 0;
+    const bagAdd = state.bagMode === 'add' ? bagAmount : 0;
 
     // Update sidebar
     const monthlyEl = $('monthly-total-display');
@@ -2105,7 +2125,7 @@ function updateCalculations() {
     const bagDiscountEl = $('bag-discount-display');
     const bagDiscountRow = $('bag-discount-row');
 
-    const initialTotal = totalEntrance + totalMaterial + totalExamFee + totalOneTime - bagDiscount;
+    const initialTotal = totalEntrance + totalMaterial + totalExamFee + totalOneTime - bagDiscount + bagAdd;
     const grandTotal = totalMonthly + initialTotal;
 
     // Calculate handmedown deduction details
@@ -2144,8 +2164,22 @@ function updateCalculations() {
     if (materialEl) materialEl.textContent = `${grossMaterial.toLocaleString()}円`;
     if (examEl) examEl.textContent = `${totalExamFee.toLocaleString()}円`;
     if (onetimeEl) onetimeEl.textContent = `${totalOneTime.toLocaleString()}円`;
-    if (bagDiscountEl) bagDiscountEl.textContent = `-${bagDiscount.toLocaleString()}円`;
-    if (bagDiscountRow) bagDiscountRow.style.display = bagDiscount > 0 ? 'flex' : 'none';
+    const bagLabel = $('bag-discount-label');
+    if (state.bagMode === 'add') {
+        if (bagDiscountEl) {
+            bagDiscountEl.textContent = `+${bagAdd.toLocaleString()}円`;
+            bagDiscountEl.style.color = '#fbbf24';
+        }
+        if (bagLabel) bagLabel.textContent = 'スクールバック追加';
+        if (bagDiscountRow) bagDiscountRow.style.display = bagAdd > 0 ? 'flex' : 'none';
+    } else {
+        if (bagDiscountEl) {
+            bagDiscountEl.textContent = `-${bagDiscount.toLocaleString()}円`;
+            bagDiscountEl.style.color = '#4ade80';
+        }
+        if (bagLabel) bagLabel.textContent = 'スクールバック差引';
+        if (bagDiscountRow) bagDiscountRow.style.display = bagDiscount > 0 ? 'flex' : 'none';
+    }
 
     // Handmedown deduction display
     const handmedownRow = $('handmedown-deduction-row');
@@ -2191,7 +2225,7 @@ function updateCalculations() {
     if (onetimeRow) onetimeRow.style.display = totalOneTime > 0 ? 'flex' : 'none';
 
     // Store for print
-    state._calc = { totalMonthly, totalEntrance, totalMaterial, totalExamFee, totalOneTime, bagDiscount, initialTotal, grandTotal, breakdown };
+    state._calc = { totalMonthly, totalEntrance, totalMaterial, totalExamFee, totalOneTime, bagDiscount, bagAdd, initialTotal, grandTotal, breakdown };
 }
 
 // ----- Generate Estimate -----
@@ -2297,6 +2331,9 @@ function generateEstimate() {
     });
     if (calc.bagDiscount > 0) {
         addRow('スクールバック差引', '代金差引', calc.bagDiscount, true);
+    }
+    if (calc.bagAdd > 0) {
+        addRow('スクールバック追加', 'スクールバック購入', calc.bagAdd);
     }
 
     addTotalRow('初回納入金 合計', calc.initialTotal);
