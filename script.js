@@ -18,14 +18,14 @@ const DEFAULT_COURSES = {
         entrance: 5500, monthly: 7700, examFee: 2200,
         materials: { yoji23: 21900 },
         materialItems: [
-            { name: 'ストーリーブック（2冊）', price: 0, reusable: true },
-            { name: 'I Can Do It!〈しつけ絵本〉', price: 0, reusable: true },
-            { name: 'ワークシートセット', price: 0, reusable: false },
-            { name: 'ピクチャーカードセット', price: 0, reusable: true },
-            { name: '知育お道具セット', price: 0, reusable: true },
-            { name: 'アルファベットパズル', price: 0, reusable: true },
-            { name: '家庭学習用DVD', price: 0, reusable: true },
-            { name: 'ActiveTalk（録音・音声ペン）PT SDカード付き', price: 0, reusable: true },
+            { name: 'ストーリーブック（2冊）', price: 2750, reusable: true },
+            { name: 'I Can Do It!〈しつけ絵本〉', price: 1650, reusable: true },
+            { name: 'ワークシートセット', price: 2750, reusable: false },
+            { name: 'ピクチャーカードセット', price: 1100, reusable: true },
+            { name: '知育お道具セット', price: 1430, reusable: true },
+            { name: 'アルファベットパズル', price: 1430, reusable: true },
+            { name: '家庭学習用DVD', price: 2200, reusable: true },
+            { name: 'ActiveTalk（録音・音声ペン）PT SDカード付き', price: 6600, reusable: true },
             { name: 'スクールバッグ', price: 1990, reusable: true }
         ],
         addons: [{
@@ -49,7 +49,7 @@ const DEFAULT_COURSES = {
             { name: '家庭学習用DVD', price: 2750, reusable: true },
             { name: 'ホームワークシート', price: 770, reusable: false },
             { name: 'ワークシートセット', price: 550, reusable: false },
-            { name: 'ActiveTalk（録音・音声ペン）PB SDカード付き', price: 3300, reusable: true },
+            { name: 'ActiveTalk（録音・音声ペン）PB SDカード付き', price: 6600, reusable: true },
             { name: 'スクールバッグ', price: 1990, reusable: true }
         ],
         addons: [{
@@ -70,17 +70,17 @@ const DEFAULT_COURSES = {
             { name: 'コースブック', price: 3210, reusable: false },
             { name: 'シンク・アンド・トーク', price: 3090, reusable: false },
             { name: 'ピクチャーディクショナリー', price: 1830, reusable: true },
-            { name: 'アクティビティカードセット', price: 0, reusable: true },
-            { name: 'CDセット', price: 0, reusable: true },
-            { name: '家庭学習用DVD', price: 0, reusable: true },
+            { name: 'アクティビティカードセット', price: 2050, reusable: true },
+            { name: 'CDセット', price: 3990, reusable: true },
+            { name: '家庭学習用DVD', price: 2730, reusable: true },
             { name: 'ホームワークシート', price: 1050, reusable: false },
             { name: 'スクールバッグ', price: 1990, reusable: true }
         ],
         addons: [{
             id: 'SF', name: '読み書きプラス（SF）', detail: 'スーパーラーニング', monthlyAdd: 4400, materialsAdd: { elem_low: 10270 },
             materialItemsToAdd: [
-                { name: 'リーダーズ Level 1', price: 0, reusable: true },
-                { name: 'CD Level 1', price: 0, reusable: true },
+                { name: 'リーダーズ Level 1', price: 4720, reusable: true },
+                { name: 'CD Level 1', price: 2000, reusable: true },
                 { name: 'ダイアリー Level 1', price: 530, reusable: false },
                 { name: 'ライティングドリル', price: 2520, reusable: false },
                 { name: 'タイムドリル', price: 530, reusable: false }
@@ -97,16 +97,16 @@ const DEFAULT_COURSES = {
             { name: 'コースブック', price: 3210, reusable: false },
             { name: 'ワードブック', price: 1830, reusable: false },
             { name: 'シンク・アンド・トーク', price: 3090, reusable: false },
-            { name: 'アクティビティカードセット', price: 0, reusable: true },
-            { name: 'CDセット', price: 0, reusable: true },
-            { name: '家庭学習用DVD', price: 0, reusable: true },
+            { name: 'アクティビティカードセット', price: 2050, reusable: true },
+            { name: 'CDセット', price: 3990, reusable: true },
+            { name: '家庭学習用DVD', price: 2730, reusable: true },
             { name: 'ホームワークシート', price: 1050, reusable: false }
         ],
         addons: [{
             id: 'SI', name: '読み書きプラス（SI）', detail: 'スーパーラーニング', monthlyAdd: 4400, materialsAdd: { elem_low: 10270, elem_high: 10270 },
             materialItemsToAdd: [
                 { name: 'リーダーズ Level 2', price: 4720, reusable: true },
-                { name: 'CD Level 2', price: 0, reusable: true },
+                { name: 'CD Level 2', price: 2000, reusable: true },
                 { name: 'ダイアリー Level 2', price: 530, reusable: false },
                 { name: 'ライティングドリル', price: 2520, reusable: false },
                 { name: 'タイムドリル', price: 530, reusable: false }
@@ -124,15 +124,15 @@ const DEFAULT_COURSES = {
             { name: 'ワードブック', price: 2810, reusable: false },
             { name: 'シンク・アンド・トーク', price: 3360, reusable: false },
             { name: 'ホームワークシート', price: 1050, reusable: false },
-            { name: 'CDセット', price: 0, reusable: true },
-            { name: '家庭学習用DVD', price: 0, reusable: true },
+            { name: 'CDセット', price: 4200, reusable: true },
+            { name: '家庭学習用DVD', price: 2730, reusable: true },
             { name: 'スクールバッグ', price: 1990, reusable: true }
         ],
         addons: [{
             id: 'SE', name: '読み書きプラス（SE）', detail: 'スーパーラーニング', monthlyAdd: 4400, materialsAdd: { elem_high: 10270 },
             materialItemsToAdd: [
                 { name: 'リーダーズ Level 2', price: 4720, reusable: true },
-                { name: 'CD Level 2', price: 0, reusable: true },
+                { name: 'CD Level 2', price: 2000, reusable: true },
                 { name: 'ダイアリー Level 2', price: 530, reusable: false },
                 { name: 'ライティングドリル', price: 2520, reusable: false },
                 { name: 'タイムドリル', price: 530, reusable: false }
@@ -172,14 +172,14 @@ const DEFAULT_COURSES = {
         entrance: 5500, monthly: 9900, examFee: 0,
         materials: { chu12: 21130 },
         materialItems: [
-            { name: 'コースブック', price: 0, reusable: false },
-            { name: 'アクセスハンドブック', price: 0, reusable: false },
-            { name: 'ボイシズ', price: 0, reusable: false },
-            { name: 'リーディングストラテジーズ', price: 0, reusable: false },
-            { name: 'ウィークリーテスト', price: 0, reusable: false },
-            { name: 'ホームワークブック', price: 0, reusable: false },
-            { name: '音声・動画教材', price: 0, reusable: true },
-            { name: 'ECC Study Assist（学習支援アプリ）', price: 0, reusable: true },
+            { name: 'コースブック', price: 3300, reusable: false },
+            { name: 'アクセスハンドブック', price: 2200, reusable: false },
+            { name: 'ボイシズ', price: 2310, reusable: false },
+            { name: 'リーディングストラテジーズ', price: 1650, reusable: false },
+            { name: 'ウィークリーテスト', price: 660, reusable: false },
+            { name: 'ホームワークブック', price: 1430, reusable: false },
+            { name: '音声・動画教材', price: 3630, reusable: true },
+            { name: 'ECC Study Assist（学習支援アプリ）', price: 3960, reusable: true },
             { name: 'スクールバッグ', price: 1990, reusable: true }
         ],
         addons: [{
@@ -197,14 +197,14 @@ const DEFAULT_COURSES = {
         entrance: 5500, monthly: 9900, examFee: 0,
         materials: { chu12: 21130 },
         materialItems: [
-            { name: 'コースブック', price: 0, reusable: false },
-            { name: 'アクセスハンドブック', price: 0, reusable: false },
-            { name: 'ボイシズ', price: 0, reusable: false },
-            { name: 'リーディングストラテジーズ', price: 0, reusable: false },
-            { name: 'ウィークリーテスト', price: 0, reusable: false },
-            { name: 'ホームワークブック', price: 0, reusable: false },
-            { name: '音声・動画教材', price: 0, reusable: true },
-            { name: 'ECC Study Assist（学習支援アプリ）', price: 0, reusable: true },
+            { name: 'コースブック', price: 3300, reusable: false },
+            { name: 'アクセスハンドブック', price: 2200, reusable: false },
+            { name: 'ボイシズ', price: 2310, reusable: false },
+            { name: 'リーディングストラテジーズ', price: 1650, reusable: false },
+            { name: 'ウィークリーテスト', price: 660, reusable: false },
+            { name: 'ホームワークブック', price: 1430, reusable: false },
+            { name: '音声・動画教材', price: 3630, reusable: true },
+            { name: 'ECC Study Assist（学習支援アプリ）', price: 3960, reusable: true },
             { name: 'スクールバッグ', price: 1990, reusable: true }
         ],
         addons: [{
@@ -222,15 +222,15 @@ const DEFAULT_COURSES = {
         entrance: 5500, monthly: 9900, examFee: 0,
         materials: { chu3: 22450 },
         materialItems: [
-            { name: 'コースブック', price: 0, reusable: false },
-            { name: 'アクセスハンドブック', price: 0, reusable: false },
-            { name: 'ボイシズ', price: 0, reusable: false },
-            { name: 'リーディングストラテジーズ', price: 0, reusable: false },
-            { name: 'ウィークリーテスト', price: 0, reusable: false },
-            { name: 'ホームワークブック', price: 0, reusable: false },
-            { name: '音声・動画教材', price: 0, reusable: true },
-            { name: '中学英語分野別演習', price: 0, reusable: false },
-            { name: 'ECC Study Assist（学習支援アプリ）', price: 0, reusable: true },
+            { name: 'コースブック', price: 3300, reusable: false },
+            { name: 'アクセスハンドブック', price: 2200, reusable: false },
+            { name: 'ボイシズ', price: 2310, reusable: false },
+            { name: 'リーディングストラテジーズ', price: 1650, reusable: false },
+            { name: 'ウィークリーテスト', price: 660, reusable: false },
+            { name: 'ホームワークブック', price: 1430, reusable: false },
+            { name: '音声・動画教材', price: 3630, reusable: true },
+            { name: '中学英語分野別演習', price: 1320, reusable: false },
+            { name: 'ECC Study Assist（学習支援アプリ）', price: 3960, reusable: true },
             { name: 'スクールバッグ', price: 1990, reusable: true }
         ],
         addons: [{
@@ -310,7 +310,7 @@ const DEFAULT_COURSES = {
         materialItems: [
             { name: 'New Breakthrough 問題集（中1）', price: 2920, reusable: false },
             { name: 'Kワーク（中1）', price: 1870, reusable: false },
-            { name: '中間・期末対策テスト（中1）', price: 0, reusable: false },
+            { name: '中間・期末対策テスト（中1）', price: 880, reusable: false },
             { name: 'P.S.ノート', price: 440, reusable: false },
             { name: '音声教材', price: 2640, reusable: true },
             { name: 'スクールバッグ', price: 1990, reusable: true }
@@ -331,7 +331,7 @@ const DEFAULT_COURSES = {
         materialItems: [
             { name: 'New Breakthrough 問題集（中2）', price: 2920, reusable: false },
             { name: 'Kワーク（中2）', price: 1870, reusable: false },
-            { name: '中間・期末対策テスト（中2）', price: 0, reusable: false },
+            { name: '中間・期末対策テスト（中2）', price: 880, reusable: false },
             { name: 'P.S.ノート', price: 440, reusable: false },
             { name: '音声教材', price: 2640, reusable: true },
             { name: 'スクールバッグ', price: 1990, reusable: true }
@@ -352,7 +352,7 @@ const DEFAULT_COURSES = {
         materialItems: [
             { name: 'New Breakthrough 問題集（中3）', price: 2920, reusable: false },
             { name: 'Kワーク（中3）', price: 1870, reusable: false },
-            { name: '中間・期末対策テスト（中3）', price: 0, reusable: false },
+            { name: '中間・期末対策テスト（中3）', price: 880, reusable: false },
             { name: 'P.S.ノート', price: 440, reusable: false },
             { name: '音声教材', price: 2640, reusable: true },
             { name: 'スクールバッグ', price: 1990, reusable: true }
@@ -374,21 +374,21 @@ const DEFAULT_COURSES = {
         entrance: 5500, monthly: 6600, examFee: 0,
         materials: { elem_low: 16440, elem_high: 18020, chu12: 18020, chu3: 18020 },
         materialItems5J: [
-            { name: 'ActiveTalk（録音・音声ペン）5級準備 SDカード付き', price: 0, reusable: true },
-            { name: '5級準備 Book 1', price: 0, reusable: false },
-            { name: '5級準備 Book 2', price: 0, reusable: false },
-            { name: '5級準備 ホームワークシート 1', price: 0, reusable: false },
-            { name: '5級準備 ホームワークシート 2', price: 0, reusable: false },
+            { name: 'ActiveTalk（録音・音声ペン）5級準備 SDカード付き', price: 6600, reusable: true },
+            { name: '5級準備 Book 1', price: 3360, reusable: false },
+            { name: '5級準備 Book 2', price: 3460, reusable: false },
+            { name: '5級準備 ホームワークシート 1', price: 530, reusable: false },
+            { name: '5級準備 ホームワークシート 2', price: 530, reusable: false },
             { name: 'スクールバッグ', price: 1990, reusable: true }
         ],
         materialItems: [
-            { name: 'ActiveTalk（録音・音声ペン）SDカード付き（級別）', price: 0, reusable: true },
-            { name: 'Book 1（級別）', price: 0, reusable: false },
-            { name: 'Book 2（級別）', price: 0, reusable: false },
-            { name: '直前対策 Book（級別）', price: 0, reusable: false },
-            { name: 'ホームワークシート 1（級別）', price: 0, reusable: false },
-            { name: 'ホームワークシート 2（級別）', price: 0, reusable: false },
-            { name: '直前対策ホームワークシート（級別）', price: 0, reusable: false },
+            { name: 'ActiveTalk（録音・音声ペン）SDカード付き（級別）', price: 6600, reusable: true },
+            { name: 'Book 1（級別）', price: 3150, reusable: false },
+            { name: 'Book 2（級別）', price: 3150, reusable: false },
+            { name: '直前対策 Book（級別）', price: 1580, reusable: false },
+            { name: 'ホームワークシート 1（級別）', price: 530, reusable: false },
+            { name: 'ホームワークシート 2（級別）', price: 530, reusable: false },
+            { name: '直前対策ホームワークシート（級別）', price: 530, reusable: false },
             { name: 'スクールバッグ', price: 1990, reusable: true }
         ]
     },
@@ -404,9 +404,9 @@ const DEFAULT_COURSES = {
         ],
         materials: {},
         materialItems543: [
-            { name: 'ActiveTalk（録音・音声ペン）SDカード付き（級別）', price: 0, reusable: true },
-            { name: '直前対策 Book（級別）', price: 0, reusable: false },
-            { name: '直前対策ホームワークシート（級別）', price: 0, reusable: false }
+            { name: 'ActiveTalk（録音・音声ペン）SDカード付き（級別）', price: 6600, reusable: true },
+            { name: '直前対策 Book（級別）', price: 1580, reusable: false },
+            { name: '直前対策ホームワークシート（級別）', price: 530, reusable: false }
         ],
         materialItems2P2: [
             { name: 'ActiveTalk（録音・音声ペン）SDカード付き（級別）', price: 0, reusable: true },
@@ -429,19 +429,19 @@ const DEFAULT_COURSES = {
         materials: {},
         materialItemsLv1to5: [
             { name: 'ステップ・アルファ（プリント）', price: 0, reusable: false },
-            { name: '計算ワーク（レベル別）', price: 0, reusable: false },
-            { name: '計算プリント管理ファイルセット', price: 0, reusable: false },
+            { name: '計算ワーク（レベル別）', price: 3150, reusable: false },
+            { name: '計算プリント管理ファイルセット', price: 1050, reusable: false },
             { name: 'スクールバッグ', price: 1990, reusable: true }
         ],
         materialItemsLv6: [
             { name: 'ステップ・アルファ（プリント）', price: 0, reusable: false },
-            { name: '計算ワーク Lv6', price: 0, reusable: false },
-            { name: '計算プリント管理ファイルセット', price: 0, reusable: false },
+            { name: '計算ワーク Lv6', price: 2620, reusable: false },
+            { name: '計算プリント管理ファイルセット', price: 1050, reusable: false },
             { name: 'スクールバッグ', price: 1990, reusable: true }
         ],
         materialItems2kai: [
             { name: 'ステップ・アルファ（プリント）', price: 0, reusable: false },
-            { name: '計算プリント管理ファイルセット', price: 0, reusable: false },
+            { name: '計算プリント管理ファイルセット', price: 1050, reusable: false },
             { name: 'スクールバッグ', price: 1990, reusable: true }
         ]
     },
@@ -481,39 +481,39 @@ const DEFAULT_COURSES = {
         materials: { yoji45: 3460, elem_low: 3880, elem_high: 4290, chu12: 3880, chu3: 3880, high: 3880, adult: 3880 },
         materialItems10junbi: [
             { name: '漢字プリント', price: 0, reusable: false },
-            { name: '10級準備 おてほんブック', price: 0, reusable: false },
-            { name: '10級準備 れんしゅうノート', price: 0, reusable: false },
-            { name: '漢字プリント管理ファイルセット', price: 0, reusable: false },
+            { name: '10級準備 おてほんブック', price: 2100, reusable: false },
+            { name: '10級準備 れんしゅうノート', price: 840, reusable: false },
+            { name: '漢字プリント管理ファイルセット', price: 1050, reusable: false },
             { name: 'スクールバッグ', price: 1990, reusable: true }
         ],
         materialItems10: [
             { name: '漢字プリント', price: 0, reusable: false },
-            { name: '漢字練習ノート（1冊）', price: 0, reusable: false },
-            { name: '漢字プリント管理ファイルセット', price: 0, reusable: false },
+            { name: '漢字練習ノート（1冊）', price: 420, reusable: false },
+            { name: '漢字プリント管理ファイルセット', price: 1050, reusable: false },
             { name: 'スクールバッグ', price: 1990, reusable: true }
         ],
         materialItems9: [
             { name: '漢字プリント', price: 0, reusable: false },
-            { name: '漢字練習ノート（2冊）', price: 0, reusable: false },
-            { name: '漢字プリント管理ファイルセット', price: 0, reusable: false },
+            { name: '漢字練習ノート（2冊）', price: 840, reusable: false },
+            { name: '漢字プリント管理ファイルセット', price: 1050, reusable: false },
             { name: 'スクールバッグ', price: 1990, reusable: true }
         ],
         materialItems87: [
             { name: '漢字プリント', price: 0, reusable: false },
-            { name: '漢字練習ノート（3冊）', price: 0, reusable: false },
-            { name: '漢字プリント管理ファイルセット', price: 0, reusable: false },
+            { name: '漢字練習ノート（3冊）', price: 1250, reusable: false },
+            { name: '漢字プリント管理ファイルセット', price: 1050, reusable: false },
             { name: 'スクールバッグ', price: 1990, reusable: true }
         ],
         materialItems65: [
             { name: '漢字プリント', price: 0, reusable: false },
-            { name: '漢字練習ノート（2冊）', price: 0, reusable: false },
-            { name: '漢字プリント管理ファイルセット', price: 0, reusable: false },
+            { name: '漢字練習ノート（2冊）', price: 840, reusable: false },
+            { name: '漢字プリント管理ファイルセット', price: 1050, reusable: false },
             { name: 'スクールバッグ', price: 1990, reusable: true }
         ],
         materialItems43jun2: [
             { name: '漢字プリント', price: 0, reusable: false },
-            { name: '漢字練習ノート（2冊）', price: 0, reusable: false },
-            { name: '漢字プリント管理ファイルセット', price: 0, reusable: false },
+            { name: '漢字練習ノート（2冊）', price: 840, reusable: false },
+            { name: '漢字プリント管理ファイルセット', price: 1050, reusable: false },
             { name: 'スクールバッグ', price: 1990, reusable: true }
         ]
     },
